@@ -7,7 +7,7 @@ Why do we need:
 * `cli::stdout`
 * `cli::stderr`
 
-* to run a component that uses only std's "format!"?
+to run a component that uses only std's "format!"?
 
 ## Reproduce
 rustc: 1.82.0
