@@ -1,0 +1,7 @@
+package component:formatter;
+
+/// An example world for the component to target.
+world formatter {
+    import print: func(s: string);
+    export format-str: func(a: string, b: string) -> string; 
+}
