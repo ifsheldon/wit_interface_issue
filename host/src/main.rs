@@ -56,42 +56,6 @@ fn main() -> Result<()> {
     };
     let mut store = Store::new(&engine, state);
     Formatter::add_to_linker(&mut linker, |s| s)?;
-    
-    // Note: 
-    // The below block is copied from `wasmtime_wasi::add_to_linker_sync`.
-    // Interfaces that are okay to be removed without causing a runtime error are commented out.
-    // But why a "format!()" in the implementation needs `sync::filesystem::types`, `sync::io::streams`, `cli::exit`, `cli::environment`, `cli::stdin`, `cli::stdout`, `cli::stderr`?
-    {
-        let l = &mut linker;
-        let closure = type_annotate::<MyState, _>(|t| WasiImpl(t));
-        // wasmtime_wasi::bindings::clocks::wall_clock::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::clocks::monotonic_clock::add_to_linker_get_host(l, closure)?;
-        wasmtime_wasi::bindings::sync::filesystem::types::add_to_linker_get_host(l, closure)?;
-        wasmtime_wasi::bindings::filesystem::preopens::add_to_linker_get_host(l, closure)?;
-        wasmtime_wasi::bindings::io::error::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::sync::io::poll::add_to_linker_get_host(l, closure)?;
-        wasmtime_wasi::bindings::sync::io::streams::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::random::random::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::random::insecure::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::random::insecure_seed::add_to_linker_get_host(l, closure)?;
-        wasmtime_wasi::bindings::cli::exit::add_to_linker_get_host(l, closure)?;
-        wasmtime_wasi::bindings::cli::environment::add_to_linker_get_host(l, closure)?;
-        wasmtime_wasi::bindings::cli::stdin::add_to_linker_get_host(l, closure)?;
-        wasmtime_wasi::bindings::cli::stdout::add_to_linker_get_host(l, closure)?;
-        wasmtime_wasi::bindings::cli::stderr::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::cli::terminal_input::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::cli::terminal_output::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::cli::terminal_stdin::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::cli::terminal_stdout::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::cli::terminal_stderr::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::sync::sockets::tcp::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::sockets::tcp_create_socket::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::sync::sockets::udp::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::sockets::udp_create_socket::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::sockets::instance_network::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::sockets::network::add_to_linker_get_host(l, closure)?;
-        // wasmtime_wasi::bindings::sockets::ip_name_lookup::add_to_linker_get_host(l, closure)?;
-    }
 
     let bindings = Formatter::instantiate(&mut store, &component, &linker)?;
     let result = bindings.call_format_str(&mut store, "a", "b")?;
