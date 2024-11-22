@@ -64,6 +64,7 @@ fn main() -> Result<()> {
     {
         let l = &mut linker;
         let closure = type_annotate::<MyState, _>(|t| WasiImpl(t));
+        let options = wasmtime_wasi::bindings::sync::LinkOptions::default();
         // wasmtime_wasi::bindings::clocks::wall_clock::add_to_linker_get_host(l, closure)?;
         // wasmtime_wasi::bindings::clocks::monotonic_clock::add_to_linker_get_host(l, closure)?;
         wasmtime_wasi::bindings::sync::filesystem::types::add_to_linker_get_host(l, closure)?;
@@ -74,7 +75,7 @@ fn main() -> Result<()> {
         // wasmtime_wasi::bindings::random::random::add_to_linker_get_host(l, closure)?;
         // wasmtime_wasi::bindings::random::insecure::add_to_linker_get_host(l, closure)?;
         // wasmtime_wasi::bindings::random::insecure_seed::add_to_linker_get_host(l, closure)?;
-        wasmtime_wasi::bindings::cli::exit::add_to_linker_get_host(l, closure)?;
+        wasmtime_wasi::bindings::cli::exit::add_to_linker_get_host(l, &options.into(), closure)?;
         wasmtime_wasi::bindings::cli::environment::add_to_linker_get_host(l, closure)?;
         wasmtime_wasi::bindings::cli::stdin::add_to_linker_get_host(l, closure)?;
         wasmtime_wasi::bindings::cli::stdout::add_to_linker_get_host(l, closure)?;
