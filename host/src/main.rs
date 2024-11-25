@@ -56,6 +56,12 @@ fn main() -> Result<()> {
     };
     let mut store = Store::new(&engine, state);
     Formatter::add_to_linker(&mut linker, |s| s)?;
+    {
+        // why isn't this block enough?
+        let l = &mut linker;
+        let closure = type_annotate::<MyState, _>(|t| WasiImpl(t));
+        wasmtime_wasi::bindings::cli::environment::add_to_linker_get_host(l, closure)?;
+    }
 
     let bindings = Formatter::instantiate(&mut store, &component, &linker)?;
     let result = bindings.call_format_str(&mut store, "a", "b")?;
